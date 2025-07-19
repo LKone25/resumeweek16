@@ -1,0 +1,25 @@
+name: bild push and deploy
+
+on:
+   push:
+     branches: [ "main" ]
+   pull_request:
+     branches: [ "main" ]
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ROLE: ${ secrets.AWS_ACTION_ROLE }
+
+jobs:
+
+    build: 
+      runs-on: ubuntu-latest  # githug actions runner
+      steps:
+          - name: Clone repo 
+            uses: actions/checkout@v3 
+          - name: AWS creds config
+            uses: aws-actions/configure-aws-credentials@v3
+            with:
+              role-to-assume: ${{ secrets.AWS_ROLE }}   # Open Id Connect OIDC
+              aws-region: ${{ env.AWS_REGION }}
+
